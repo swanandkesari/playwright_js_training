@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Calculator - HealthyBites</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c5530;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .calculator-section {
+            margin: 25px 0;
+            padding: 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background: #f8fff8;
+        }
+        .input-group {
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        label {
+            font-weight: bold;
+            color: #2c5530;
+            flex: 1;
+        }
+        input, select {
+            flex: 2;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border-left: 5px solid #4CAF50;
+        }
+        .ingredient-list {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+        }
+        .ingredient-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .ingredient-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Recipe Calculator</h1>
+        <p style="text-align: center; color: #666; font-style: italic;">
+            Adjust recipe portions and calculate nutritional values
+        </p>
+
+        <div class="calculator-section">
+            <h2>Recipe Scaling</h2>
+            <div class="input-group">
+                <label for="original-servings">Original Recipe Serves:</label>
+                <input type="number" id="original-servings" value="4" min="1" max="20">
+            </div>
+            <div class="input-group">
+                <label for="desired-servings">Desired Servings:</label>
+                <input type="number" id="desired-servings" value="6" min="1" max="50">
+            </div>
+            <div class="input-group">
+                <label for="recipe-type">Recipe Category:</label>
+                <select id="recipe-type">
+                    <option value="main-dish">Main Dish</option>
+                    <option value="side-dish">Side Dish</option>
+                    <option value="dessert">Dessert</option>
+                    <option value="appetizer">Appetizer</option>
+                    <option value="beverage">Beverage</option>
+                </select>
+            </div>
+            <button onclick="calculateScaling()" role="button">Calculate Scaling Factor</button>
+        </div>
+
+        <div class="calculator-section">
+            <h2>Ingredient Scaling</h2>
+            <div id="ingredients-container">
+                <div class="ingredient-list">
+                    <h3>Original Ingredients (Serves <span id="original-display">4</span>):</h3>
+                    <div class="ingredient-item">
+                        <span>Chicken Breast</span>
+                        <span>2 lbs</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span>Brown Rice</span>
+                        <span>2 cups</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span>Mixed Vegetables</span>
+                        <span>3 cups</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span>Olive Oil</span>
+                        <span>3 tbsp</span>
+                    </div>
+                    <div class="ingredient-item">
+                        <span>Garlic Cloves</span>
+                        <span>4 pieces</span>
+                    </div>
+                </div>
+
+                <div class="ingredient-list" id="scaled-ingredients" style="display: none;">
+                    <h3>Scaled Ingredients (Serves <span id="scaled-display">6</span>):</h3>
+                    <div id="scaled-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-section">
+            <h2>Nutritional Calculator</h2>
+            <div class="input-group">
+                <label for="calories-per-serving">Calories per Original Serving:</label>
+                <input type="number" id="calories-per-serving" value="450" min="0">
+            </div>
+            <div class="input-group">
+                <label for="protein-per-serving">Protein per Original Serving (g):</label>
+                <input type="number" id="protein-per-serving" value="35" min="0">
+            </div>
+            <div class="input-group">
+                <label for="carbs-per-serving">Carbs per Original Serving (g):</label>
+                <input type="number" id="carbs-per-serving" value="45" min="0">
+            </div>
+            <div class="input-group">
+                <label for="fat-per-serving">Fat per Original Serving (g):</label>
+                <input type="number" id="fat-per-serving" value="12" min="0">
+            </div>
+            <button onclick="calculateNutrition()" role="button">Calculate Total Nutrition</button>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <h3>Recipe Summary</h3>
+            <div id="nutrition-results"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="printRecipe()" role="button">🖨️ Print Recipe</button>
+            <button onclick="window.close()" role="button">❌ Close Window</button>
+        </div>
+    </div>
+
+    <script>
+        let scalingFactor = 1;
+
+        function calculateScaling() {
+            const original = parseInt(document.getElementById('original-servings').value);
+            const desired = parseInt(document.getElementById('desired-servings').value);
+            
+            scalingFactor = desired / original;
+            
+            document.getElementById('original-display').textContent = original;
+            document.getElementById('scaled-display').textContent = desired;
+            
+            // Scale ingredients
+            const originalIngredients = [
+                { name: 'Chicken Breast', amount: 2, unit: 'lbs' },
+                { name: 'Brown Rice', amount: 2, unit: 'cups' },
+                { name: 'Mixed Vegetables', amount: 3, unit: 'cups' },
+                { name: 'Olive Oil', amount: 3, unit: 'tbsp' },
+                { name: 'Garlic Cloves', amount: 4, unit: 'pieces' }
+            ];
+
+            const scaledList = document.getElementById('scaled-list');
+            scaledList.innerHTML = '';
+            
+            originalIngredients.forEach(ingredient => {
+                const scaledAmount = (ingredient.amount * scalingFactor).toFixed(1);
+                const div = document.createElement('div');
+                div.className = 'ingredient-item';
+                div.innerHTML = `
+                    <span>${ingredient.name}</span>
+                    <span>${scaledAmount} ${ingredient.unit}</span>
+                `;
+                scaledList.appendChild(div);
+            });
+
+            document.getElementById('scaled-ingredients').style.display = 'block';
+        }
+
+        function calculateNutrition() {
+            const desired = parseInt(document.getElementById('desired-servings').value);
+            const calories = parseInt(document.getElementById('calories-per-serving').value);
+            const protein = parseInt(document.getElementById('protein-per-serving').value);
+            const carbs = parseInt(document.getElementById('carbs-per-serving').value);
+            const fat = parseInt(document.getElementById('fat-per-serving').value);
+
+            const totalCalories = calories * desired;
+            const totalProtein = protein * desired;
+            const totalCarbs = carbs * desired;
+            const totalFat = fat * desired;
+
+            const resultsDiv = document.getElementById('nutrition-results');
+            resultsDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; text-align: center;">
+                    <div>
+                        <h4 style="color: #2c5530; margin-bottom: 5px;">Total Recipe</h4>
+                        <p><strong>Calories:</strong> ${totalCalories}</p>
+                        <p><strong>Protein:</strong> ${totalProtein}g</p>
+                        <p><strong>Carbs:</strong> ${totalCarbs}g</p>
+                        <p><strong>Fat:</strong> ${totalFat}g</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #2c5530; margin-bottom: 5px;">Per Serving (${desired} servings)</h4>
+                        <p><strong>Calories:</strong> ${calories}</p>
+                        <p><strong>Protein:</strong> ${protein}g</p>
+                        <p><strong>Carbs:</strong> ${carbs}g</p>
+                        <p><strong>Fat:</strong> ${fat}g</p>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 5px;">
+                    <p style="margin: 0; text-align: center;"><strong>Scaling Factor:</strong> ${scalingFactor.toFixed(2)}x</p>
+                </div>
+            `;
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function printRecipe() {
+            window.print();
+        }
+
+        // Initialize with default calculation
+        calculateScaling();
+        calculateNutrition();
+    </script>
+</body>
+</html>
