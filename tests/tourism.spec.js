@@ -111,7 +111,7 @@ test('alert raised for blank password', async ({ page }) => {
 // 6. Again click on ship icon and this time accept the alert by clicking on OK button and capture the alert message and print it on console
 // 7. Verify that you are navigated to the new page by checking the page title
 
-test.only('alert and confirm handling test', async ({ page }) => {
+test('alert and confirm handling test', async ({ page }) => {
     await page.goto('https://nichethyself.com/tourism/home.html');
     //Click on Myaccount to enter in Login Page
     await page.getByRole('link', { name: 'My Account' }).click();

@@ -118,14 +118,20 @@ testng : before and after methods from selenium are called fixtures in playwrigh
   await expect(page).toHaveTitle(/Playwright/); // "</Playwright/> is regular expression to search if toHaveTitle contains/ includes this string.
   }
 
-- **Page** : Isolated Page instance, created for each test. Pages are isolated between tests due to fixtures.context isolation.
+- ## Page :
+- Isolated Page instance, created for each test. Pages are isolated between tests due to fixtures.context isolation.
     - This is the most common fixture used in a test.
+    - **lazy loader**
+        - if URL is blank it will wait.. so it will not raise error until action is called.
+        -  Checks element is there?
+            - then hover it.. this is action when error will be thrown..
+            - then click or the operation..
+        - unless elements are visible we can't go further.. so we check it toBeVisible
 
-    - *goto* : to go to the given url
-    - *getByRole* : best way to locate element.
+    - **goto** : to go to the given url
+    - **getByRole** : best way to locate element.
         - given a choice chose this.
         -  it is using the accessibility aspect of website.
-
             - user experience will be same. 
                 - visually challenged person can access website
                 - audio challenged.
@@ -134,11 +140,9 @@ testng : before and after methods from selenium are called fixtures in playwrigh
                 - each elements have implicit roles identified.
         -  this is not a tag name similar to Selenium.
          - this is not as per authority perspective like customer or devloper or QA..
-
-
             - if the link is hidden it will not be available for the user..
         - each element on the page has identification.
-        - *role* attribute is used. 
+        - **role** attribute is used. 
             **ARIA** - Accesibility rich Internet 
                 W3c standards
                 - accessibility testing is a branch of testing.
@@ -151,18 +155,101 @@ testng : before and after methods from selenium are called fixtures in playwrigh
         - when we take action on locator we get element located by locator.
         - input element doesnot21 have visible text but we have linked labels which has names/ visible texts.. 
 
+    - **getByPlaceholder**:
+        - Locates elements using the `placeholder` attribute of input fields.
+        - Example:
+          ```javascript
+          await page.getByPlaceholder('Username').fill('exampleUser');
+          ```
+        - Useful for identifying input fields with placeholder text.
 
-    - **lazy loader**
-        - if URL is blank it will wait.. so it will not raise error until action is called.
-        -  Checks element is there?
-            - then hover it.. this is action when error will be thrown..
-            - then click or the operation..
-        - unless elements are visible we can't go further.. so we check it toBeVisible
+    - **getByText**:
+        - Locates elements by their text content.
+        - Example:
+          ```javascript
+          await page.getByText('Welcome, John!').click();
+          ```
+        - Supports substring, exact string, or regular expression matching.
 
+    - **getByLabel**:
+        - Locates form controls by their associated label's text.
+        - Example:
+          ```javascript
+          await page.getByLabel('Password').fill('secret-password');
+          ```
+        - Useful for interacting with labeled input fields.
+
+    - **getByAltText**:
+        - Locates elements (e.g., images) by their alternative text.
+        - Example:
+          ```javascript
+          await page.getByAltText('playwright logo').click();
+          ```
+        - Ideal for testing accessibility features.
+
+    - **getByTitle**:
+        - Locates elements by their `title` attribute.
+        - Example:
+          ```javascript
+          await page.getByTitle('Issues count').click();
+          ```
+        - Useful for elements with descriptive tooltips.
+
+    - **getByTestId**:
+        - Locates elements by their `data-testid` attribute.
+        - Example:
+          ```javascript
+          await page.getByTestId('submit-button').click();
+          ```
+        - Resilient to changes in text or role attributes.
+
+    - **CSS/XPath Locators**:
+        - General-purpose locators using CSS or XPath selectors.
+        - Example:
+          ```javascript
+          await page.locator('css=button.submit').click();
+          await page.locator('xpath=//button[text()="Submit"]').click();
+          ```
+        - Use sparingly as they are less resilient to DOM changes.
 
 - **Web Testing Intro**
 
     - open the same page in chrome.
     - Right click and select inspect.
     - Devloper tools will open to show text formatted html to show the elements.
-    - 
+    -
+
+# Additional Notes
+
+## Playwright Configuration
+- The `playwright.config.js` file contains the following key settings:
+  - `testDir`: Specifies the directory where tests are located (default: `./tests`).
+  - `fullyParallel`: Enables running tests in parallel.
+  - `forbidOnly`: Prevents accidental use of `test.only` in CI environments.
+  - `retries`: Configures retries for failed tests (default: 2 in CI).
+  - `reporter`: Specifies the test reporter (default: `html`).
+  - `trace`: Collects trace data on the first retry for debugging.
+  - `projects`: Configures browser-specific settings, such as `chromium` for Desktop Chrome.
+
+## Dependencies
+- The `package.json` file lists the following dependencies:
+  - `@playwright/test`: Playwright testing framework.
+  - `@types/node`: TypeScript definitions for Node.js.
+
+## Example Tests
+- The `example.spec.js` file demonstrates basic Playwright functionality:
+  - **Test 1: Verifying Page Title**
+    ```javascript
+    test('has title', async ({ page }) => {
+      await page.goto('https://playwright.dev/');
+      await expect(page).toHaveTitle(/Playwright/);
+    });
+    ```
+  - **Test 2: Interacting with Elements**
+    ```javascript
+    test('get started link', async ({ page }) => {
+      await page.goto('https://playwright.dev/');
+      await page.getByRole('link', { name: 'Get started' }).click();
+      await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+    });
+    ```
