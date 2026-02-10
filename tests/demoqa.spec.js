@@ -43,13 +43,11 @@ test('drag and drop test', async ({ page }) => {
 // 2. Select Sab and Audi
 // 3. Click submit button
 // 4. Verify that the selected values are displayed correctly
-test.only('multi select test', async ({ page }) => {
+test('multi select test', async ({ page }) => {
     await page.goto('https://demoqa.com/select-menu');
     const multiSelect = page.locator('//select[@id="cars"]');
     await multiSelect.selectOption(['saab', 'audi']);
-
-    await expect(page.locator('select#cars option[value="saab"]')).toHaveAttribute('selected', 'selected');
-    await expect(page.locator('select#cars option[value="audi"]')).toHaveAttribute('selected', 'selected');
-
-    await page.waitForTimeout(5000);
+    //await page.waitForTimeout(5000);
+    await expect(multiSelect).toHaveValues(['saab', 'audi']);
+    //await page.waitForTimeout(5000);
 });

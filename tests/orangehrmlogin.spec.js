@@ -1,6 +1,11 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
+//Assignment to handle login functionality
+//1. Visit the URL: https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
+//2. enter the username and password
+//3. Click the login button.
+//4. Expects page to have a heading with the name of Installation.
 test('orange hrm login test', async ({ page }) => {
   await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
 

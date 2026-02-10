@@ -1,6 +1,13 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
-/*
+//Assignment to handle login functionality
+//Date 2Feb26
+// 1. Visit the URL: https://nichethyself.com/tourism/
+// 2. Click on Myaccount to enter in Login Page
+// 3. enter the username and password
+// 4. Click the login button.
+// 5. Expects page to have a heading with the name of Installation.
+
 test('tourism login test', async ({ page }) => {
     await page.goto('https://nichethyself.com/tourism/');
 
@@ -62,7 +69,7 @@ test('book a customized tour package', async ({ page, context }) => {
     await customizedTourPage.waitForTimeout(5000);
 
 });
-*/
+
 
 //Assignment to handle alert
 //Date 4Feb26
@@ -91,4 +98,56 @@ test('alert raised for blank password', async ({ page }) => {
         await dialog.accept();
     });
     await page.getByRole('button', { name: 'Submit' }).click();
+});
+
+//Assignment to handle alert and confirm
+//Date 4Feb26
+//Alert case 2.
+// 1. Visit the URL: https://nichethyself.com/tourism/home.html
+// 2. Enter the valid username and password and click on submit button
+// 3. After successful login, click on ship icon
+// 4. Handle alert by typing click on Cancel button and capture the alert message and print it on console
+// 5. Verify that you are still on the same page by checking the page title
+// 6. Again click on ship icon and this time accept the alert by clicking on OK button and capture the alert message and print it on console
+// 7. Verify that you are navigated to the new page by checking the page title
+
+test.only('alert and confirm handling test', async ({ page }) => {
+    await page.goto('https://nichethyself.com/tourism/home.html');
+    //Click on Myaccount to enter in Login Page
+    await page.getByRole('link', { name: 'My Account' }).click();
+    // enter the username
+    await page.getByPlaceholder('Username').fill('stc123');
+    // enter the password
+    await page.getByRole('textbox', { name: 'Password' }).fill('12345');
+
+    // Click the login button.
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.waitForLoadState();
+    // After successful login, click on ship icon but listening to the dialog event to handle the confirm alert
+    page.once('dialog', async dialog => {
+        expect(dialog.message()).toBe('Do you wanna leave the page?');
+        // expect(dialog.message()).toBe('Do you want to visit our tourism packages page?');
+        expect(dialog.type()).toBe('confirm');
+        await dialog.dismiss(); // click on Cancel button
+    });
+    await page.locator('//*[@id="logo"]').click();
+    await page.waitForLoadState();
+    // Verify that you are still on the same page by checking the page title
+    await expect(page).toHaveTitle('My account');
+    await page.waitForLoadState();
+    // Removed unnecessary waitForTimeout
+
+    // Again click on ship icon and this time accept the alert by clicking on OK button and capture the alert message and print it on console
+    page.once('dialog', async dialog => {
+        console.log(`Dialog message: ${dialog.message()}`);
+        expect(dialog.message()).toBe('Do you wanna leave the page?');
+        expect(dialog.type()).toBe('confirm');
+        await dialog.accept(); // click on OK button
+    });
+    // use page.once instead of page.on to listen to the dialog event only for the next alert and not for the previous one as well which is already handled and we don't want to handle it again
+    await page.locator('//*[@id="logo"]').click();
+    await page.waitForLoadState();
+    // Verify that you are navigated to the new page by checking the page title
+    await expect(page).toHaveTitle('STC Tourism');
+
 });

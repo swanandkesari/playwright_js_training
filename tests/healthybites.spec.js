@@ -1,6 +1,6 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
-/*
+
 test('healthybites header test', async ({ page }) => {
     await page.goto('file:///d:/Swanand/Learning/playwright_JS_training/Website%20files%20for%20practice/healthybites.html');
 
@@ -28,7 +28,14 @@ test('healthybites menuitem test', async ({ page }) => {
     await expect(page.getByRole('menuitem', { name: /Nutrition Tips/ })).toBeVisible();
     await expect(page.getByRole('menuitem', { name: /Contact Us/ })).toBeVisible();
 });
-*/
+
+//Assignment to handle new window functionality by clicking on menu items
+// 1. Visit the URL: https://healthybites.nichethyself.com/
+// 2. Click on Open Recipe Calculator button which opens in a new tab
+// 3. handle the new tab
+// 4. Verify that the title of the new page contains Recipe Calculator
+// 5. fill 10 for recipe servers details in the new window and click on calculate button
+// 6. expectation to verify that the calculation is done correctly by checking the text in the same window
 
 // Verify new window functionality by clicking on menu items
 test('healthybites menuitem new window test', async ({ page, context }) => {
