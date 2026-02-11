@@ -114,3 +114,23 @@
 1. Go to https://bsky.app/profile/vibium.bsky.social
 2. hover over @vibium.bsky.social and it shows more details
 3. Verify that the followers are 1.3k
+
+### 12. Assignment to study download
+**Test name** : download test
+**File name** : demoqa.spec.js
+ 1. Visit https://demoqa.com/upload-download
+ 2. Click on Download and verify and store the file
+
+### 13. Assignment frames nested frames
+**Test name** : frame handling for nested frames
+**File name** : herokuapp.spec.js
+ 1. Go to the https://the-internet.herokuapp.com/frames
+ 2. Click on the Nested frame link
+ 3. Verify the text in each frame
+
+### 14. Assignment frames iframe
+**Test name** : frame handling for iframe
+**File name** : herokuapp.spec.js
+ 1. Go to the https://the-internet.herokuapp.com/frames
+ 2. Click on the iframe link
+ 3. Verify the text inside the editor

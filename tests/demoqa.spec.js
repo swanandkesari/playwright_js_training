@@ -51,3 +51,29 @@ test('multi select test', async ({ page }) => {
     await expect(multiSelect).toHaveValues(['saab', 'audi']);
     //await page.waitForTimeout(5000);
 });
+
+
+//Assignment to study download functionality
+// 1. Visit https://demoqa.com/upload-download
+// 2. Click on the Download button
+// 3. Verify that the file is downloaded successfully
+test('file download test', async ({ page }) => {
+    await page.goto('https://demoqa.com/upload-download');
+
+    // 1. Set up the download listener BEFORE the click action
+    const downloadPromise = page.waitForEvent("download");
+
+    // 2. Perform the action that triggers the download
+    await page.getByRole("link", { name: "Download" }).click();
+    // 3. Await the download event
+    const download = await downloadPromise;
+    // 4. Assert on the downloaded file 
+    expect(download.suggestedFilename()).toBe("sampleFile.jpeg");
+    // 5. Optionally save the file to a specific location
+    await download.saveAs(`./downloads/${download.suggestedFilename()}`);
+
+    const path = await download.path();
+    expect(path).not.toBeNull();// Verify that the file path is not null, indicating the file was downloaded
+    console.log(`File downloaded at: ${path}`);
+    await page.waitForTimeout(5000);
+});

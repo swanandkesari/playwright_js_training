@@ -35,3 +35,40 @@ test('alert raised', async ({ page, context }) => {
 
 
 });
+
+//Assignment to handle frames
+// 1. Go to the https://the-internet.herokuapp.com/frames
+// 2. Click on the Nested frame link
+// 3. Verify the text in each frame
+
+test('frame handling for nested frames', async ({ page }) => {
+    await page.goto('https://the-internet.herokuapp.com/frames');
+    await page.getByRole('link', { name: 'Nested Frames' }).click();
+    await page.waitForLoadState();
+
+    const frameTop = page.frameLocator('frame[name="frame-top"]');
+    const frameLeft = frameTop.frameLocator('frame[name="frame-left"]');
+    const frameMiddle = frameTop.frameLocator('frame[name="frame-middle"]');
+    const frameRight = frameTop.frameLocator('frame[name="frame-right"]');
+    const frameBottom = page.frameLocator('frame[name="frame-bottom"]');
+
+    await expect(frameLeft.getByText('LEFT')).toBeVisible();
+    await expect(frameMiddle.getByText('MIDDLE')).toBeVisible();
+    await expect(frameRight.getByText('RIGHT')).toBeVisible();
+    await expect(frameBottom.getByText('BOTTOM')).toBeVisible();
+
+});
+
+//Assignment to handle iframe
+// 1. Go to the https://the-internet.herokuapp.com/frames
+// 2. Click on the iframe link
+// 3. Verify the text inside the editor
+test('frame handling for iframe', async ({ page }) => {
+    await page.goto('https://the-internet.herokuapp.com/frames');
+    await page.getByRole('link', { name: 'iFrame' }).click();
+    await page.waitForLoadState();
+
+    const frame = page.frameLocator('iframe[id="mce_0_ifr"]');
+    await expect(frame.getByText('Your content goes here.')).toBeVisible();
+
+});
