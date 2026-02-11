@@ -10,13 +10,13 @@ test('double click test', async ({ page }) => {
     await page.goto('https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_ondblclick');
 
     // Switch to the iframe containing the paragraph
-    const frame = page.frameLocator('iframe[title="W3Schools Tryit Editor"]');
+    const frame = page.frameLocator('iframe[name="iframeResult"]');
 
     // Double-click on the paragraph
     const paragraph = frame.locator('p[ondblclick="myFunction()"]');
     await paragraph.dblclick();
 
     // Verify the text has changed to "Hello World"
-    await expect(paragraph).toHaveText('Hello World');
+    await expect(frame.locator('//*[@id="demo"]')).toHaveText('Hello World');
 });
 //<p ondblclick="myFunction()">Double-click this paragraph to trigger a function.</p>

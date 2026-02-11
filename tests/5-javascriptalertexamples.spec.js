@@ -10,7 +10,7 @@ describe('JavaScript Alert Examples', () => {
             expect(dialog.message()).toBe('Delete 1 selected nutritionist(s)?');
             expect(dialog.type()).toBe('alert');
             await dialog.dismiss();
-            
+
         });
         await page.getByRole('button', { name: '🗑️ Delete Selected' }).click();
     });
@@ -55,28 +55,28 @@ describe('JavaScript Alert Examples', () => {
 
     test('Javascript Prompt example - click OK', async ({ page, context }) => {
         await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
-           page.on('dialog', async (dialog) => {
+        page.on('dialog', async (dialog) => {
             expect(dialog.message()).toBe('I am a JS prompt');
             expect(dialog.type()).toBe('prompt');
             await dialog.accept('Hello');
         });
         await page.getByRole('button', { name: 'Click for JS Prompt' }).click();
         await page.waitForTimeout(5000);
-     
+
         expect(page.locator('p[id="result"]')).toHaveText('You entered: Hello');
 
     });
 
     test('Javascript Prompt example - click Cancel', async ({ page, context }) => {
         await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
-           page.on('dialog', async (dialog) => {
+        page.on('dialog', async (dialog) => {
             expect(dialog.message()).toBe('I am a JS prompt');
             expect(dialog.type()).toBe('prompt');
             await dialog.dismiss();
         });
         await page.getByRole('button', { name: 'Click for JS Prompt' }).click();
         await page.waitForTimeout(5000);
-     
+
         expect(page.locator('p[id="result"]')).toHaveText('You entered: null');
 
     });

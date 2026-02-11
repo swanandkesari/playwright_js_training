@@ -24,7 +24,9 @@ test('healthybites footer test', async ({ page }) => {
 });
 
 test('healthybites menuitem test', async ({ page }) => {
-    await page.goto('file:///d:/Swanand/Learning/playwright_JS_training/Website%20files%20for%20practice/healthybites.html');
+    //await page.goto('file:///d:/Swanand/Learning/playwright_JS_training/Website%20files%20for%20practice/healthybites.html');
+    const filePath = path.resolve(__dirname, '../Website files for practice/healthybites.html');
+    await page.goto(`file://${filePath}`);
 
     await expect(page.getByRole('menuitem', { name: /Home/ })).toBeVisible();
     await expect(page.getByRole('menuitem', { name: /Recipes/ })).toBeVisible();
