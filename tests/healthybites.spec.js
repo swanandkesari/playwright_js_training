@@ -1,8 +1,10 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+import path from 'path';
 
 test('healthybites header test', async ({ page }) => {
-    await page.goto('file:///d:/Swanand/Learning/playwright_JS_training/Website%20files%20for%20practice/healthybites.html');
+    const filePath = path.resolve(__dirname, '../Website files for practice/healthybites.html');
+    await page.goto(`file://${filePath}`);
 
     await expect(page.getByRole('heading', { name: /🥗 HealthyBites/, level: 1 })).toBeVisible();
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
@@ -11,7 +13,8 @@ test('healthybites header test', async ({ page }) => {
 });
 
 test('healthybites footer test', async ({ page }) => {
-    await page.goto('file:///d:/Swanand/Learning/playwright_JS_training/Website%20files%20for%20practice/healthybites.html');
+    const filePath = path.resolve(__dirname, '../Website files for practice/healthybites.html');
+    await page.goto(`file://${filePath}`);
 
     await expect(page.getByRole('link', { name: /Visit Our Blog/ })).toBeVisible();
     await expect(page.getByRole('link', { name: /Browse Healthy Recipes/ })).toBeVisible();

@@ -14,11 +14,9 @@ test('tourism login test', async ({ page }) => {
     //Click on Myaccount to enter in Login Page
     await page.getByRole('link', { name: 'My Account' }).click();
     // enter the username
-    await page.getByPlaceholder('Username').click();
     await page.getByPlaceholder('Username').fill('stc123');
     // enter the password
-    await page.getByPlaceholder('Password').click();
-    await page.getByPlaceholder('Password').fill('12345');
+    await page.getByRole('textbox', { name: 'Password' }).fill('12345');
 
     // Click the login button.
     await page.getByRole('button', { name: 'Submit' }).click();
