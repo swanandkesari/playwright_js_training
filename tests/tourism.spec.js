@@ -194,6 +194,71 @@ test('snapshot assert test2', async ({ page, context }) => {
             form.getByPlaceholder('Email address')]
         }
     )
+});
 
+//Assignment Aria snapshot assert
+// 1. Visit the URL: https://nichethyself.com/tourism/home.html
+// 2. Verify the form element using Aria snapshot
+test('aria snapshot assert test', async ({ page, context }) => {
+
+    await page.goto('https://nichethyself.com/tourism/home.html');
+    // Click on Customized tour package
+    const customizedTourPromise = context.waitForEvent('page');
+    await page.getByRole('link', { name: 'Customized tours' }).click();
+    // this should navigate to a new tab meaning a new page is opened
+    const customizedTourPage = await customizedTourPromise;//  as we already had context passed to the test function we can use it here
+    await customizedTourPage.waitForLoadState(); // wait for the new page to load completely
+
+    // verify that we are on the correct page by checking the title
+    await expect(customizedTourPage).toHaveTitle(/Customised tour/); // regex to match partial title.. head contains Customised tour
+
+
+    // Verify the page using snapshot assert
+    await expect(customizedTourPage).toHaveScreenshot({ fullPage: true });
+
+    const form = customizedTourPage.locator('form[name="internationalf"]');
+    await expect(form).toHaveScreenshot('blankForm.png')
+    await customizedTourPage.getByText('Personal Information Enter full name: Enter email address: We will not share').click();
+
+    await expect(form).toMatchAriaSnapshot(`
+    - heading "Personal Information" [level=3]
+    - text: "Enter full name:"
+    - textbox "Full name"
+    - text: "Enter email address:"
+    - textbox "Email address"
+    - paragraph: We will not share your email with anyone.
+    - text: "Enter address:"
+    - textbox
+    - separator
+    - heading "Tour Query" [level=3]
+    - text: "Number of members:"
+    - textbox "Enter number of members:"
+    - text: "Number of days:"
+    - textbox "Enter number:"
+    - text: "Flight with snacks provided:"
+    - radio "Yes"
+    - text: "Yes"
+    - radio "No"
+    - text: "No"
+    - radio "Maybe" [disabled]
+    - text: "Maybe Preferred stay:"
+    - combobox:
+      - option "5-star Hotel" [selected]
+      - option "3-star Hotel"
+      - option "Home Stay"
+    - text: "Countries to be visited:"
+    - checkbox "USA"
+    - text: USA
+    - checkbox "England"
+    - text: England
+    - checkbox "France"
+    - text: France
+    - checkbox "Switzerland" [disabled]
+    - text: "Switzerland Specify if anything else:"
+    - textbox "countries other than mentioned"
+    - button "Submit"
+    - button "Reset"
+    `);
+    //recorded above using record at cursor method.
 
 });
