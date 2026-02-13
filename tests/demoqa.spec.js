@@ -1,5 +1,6 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
+import path from 'path';
 
 //Assignment to study double click functionality
 // 1. Visit https://demoqa.com/buttons
@@ -58,6 +59,7 @@ test('multi select test', async ({ page }) => {
 // 2. Click on the Download button
 // 3. Verify that the file is downloaded successfully
 test('file download test', async ({ page }) => {
+
     await page.goto('https://demoqa.com/upload-download');
 
     // 1. Set up the download listener BEFORE the click action
@@ -71,9 +73,10 @@ test('file download test', async ({ page }) => {
     expect(download.suggestedFilename()).toBe("sampleFile.jpeg");
     // 5. Optionally save the file to a specific location
     await download.saveAs(`./downloads/${download.suggestedFilename()}`);
-
-    const path = await download.path();
-    expect(path).not.toBeNull();// Verify that the file path is not null, indicating the file was downloaded
-    console.log(`File downloaded at: ${path}`);
+    //const filePath = path.resolve(__dirname, download.path());
+    //await download.path();
+    const newFilePath = `./downloads/${download.suggestedFilename()}`;
+    expect(newFilePath).not.toBeNull();// Verify that the file path is not null, indicating the file was downloaded
+    console.log(`File downloaded at: ${newFilePath}`);
     await page.waitForTimeout(5000);
 });

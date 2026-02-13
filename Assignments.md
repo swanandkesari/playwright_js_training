@@ -134,3 +134,24 @@
  1. Go to the https://the-internet.herokuapp.com/frames
  2. Click on the iframe link
  3. Verify the text inside the editor
+
+### 15. Assignment snapshot assert
+**Test name** : snapshot test
+**File name** : tourism.spec.js
+ 1. Visit the URL: https://nichethyself.com/tourism/home.html
+ 2. Verify the page using snapshot assert
+
+### 16. Assignment snapshot2
+**Test name** : snapshot test2
+**File name** : tourism.spec.js
+1. Visit the URL: https://nichethyself.com/tourism/home.html
+2. Click on Customized tour package link which opens in a new tab
+3. Verify the page using snapshot assert
+4. Use dropdown menu value Home stay and verify the page using snapshot
+5. Mask a few fields and see if masking is reflected in the baseline snapshot
+
+### 17. Assignment Aria snapshot
+**Test name** : snapshot test
+**File name** : tourism.spec.js
+ 1. Visit the URL: https://nichethyself.com/tourism/home.html
+ 2. Verify the aria snapshot for the form element

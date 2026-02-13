@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test';
 
 test('Fill customized tour form', async ({ page, context }) => {
   await page.goto('https://nichethyself.com/tourism/');
-  await page.waitForTimeout(10000);
 
   const contactUs = page.waitForEvent('popup');
   await page.getByRole('button', { name: 'Contact us!' }).click();

@@ -253,3 +253,20 @@ testng : before and after methods from selenium are called fixtures in playwrigh
       await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
     });
     ```
+# fixtures:
+- define a reusable block
+- playwright fixtures:
+    - page
+    - context
+    - browser
+    - browserContext
+    - request
+- custom fixture
+    - can extend the tests
+    - write simple given when then like structure
+        - where given is set up
+        - when: use() function
+        - then: includes expect + tear down
+        - example:
+        ```javascript
+        ```

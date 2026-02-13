@@ -149,3 +149,51 @@ test('alert and confirm handling test', async ({ page }) => {
     await expect(page).toHaveTitle('STC Tourism');
 
 });
+
+//Assignment snapshot assert
+// 1. Visit the URL: https://nichethyself.com/tourism/home.html
+// 2. Verify the page using snapshot assert
+test('snapshot assert test', async ({ page }) => {
+    await page.goto('https://nichethyself.com/tourism/home.html');
+
+    // Verify the page using snapshot assert
+    await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
+//Assignment snapshot assert
+// 1. Visit the URL: https://nichethyself.com/tourism/home.html
+// 2. Verify the page using snapshot assert
+
+test('snapshot assert test2', async ({ page, context }) => {
+    await page.goto('https://nichethyself.com/tourism/home.html');
+    // Click on Customized tour package
+    const customizedTourPromise = context.waitForEvent('page');
+    await page.getByRole('link', { name: 'Customized tours' }).click();
+    // this should navigate to a new tab meaning a new page is opened
+    const customizedTourPage = await customizedTourPromise;//  as we already had context passed to the test function we can use it here
+    await customizedTourPage.waitForLoadState(); // wait for the new page to load completely
+
+    // verify that we are on the correct page by checking the title
+    await expect(customizedTourPage).toHaveTitle(/Customised tour/); // regex to match partial title.. head contains Customised tour
+
+
+    // Verify the page using snapshot assert
+    await expect(customizedTourPage).toHaveScreenshot({ fullPage: true });
+
+    // Fill the form details
+    const form = customizedTourPage.locator('form[name="internationalf"]');
+
+    await form.locator('//select[@id="days"]').selectOption("Home Stay");
+    // Verify the page using snapshot assert to reflect this change
+    await expect(customizedTourPage).toHaveScreenshot({ fullPage: true });
+    //mask elements
+
+    await expect(customizedTourPage).toHaveScreenshot('maskedScreenshot.png',
+        {
+            mask: [form.getByPlaceholder('Full name'),
+            form.getByPlaceholder('Email address')]
+        }
+    )
+
+
+});
