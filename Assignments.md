@@ -155,3 +155,10 @@
 **File name** : tourism.spec.js
  1. Visit the URL: https://nichethyself.com/tourism/home.html
  2. Verify the aria snapshot for the form element
+
+### 18. Assignment custom fixtures
+**Test name** : custom fixture test
+**File name** : tourism.spec.js
+1. Visit the URL: https://nichethyself.com/tourism/home.html
+2. Create a custom fixture for login
+3. use it for login tests.

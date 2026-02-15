@@ -211,7 +211,26 @@ testng : before and after methods from selenium are called fixtures in playwrigh
           await page.locator('xpath=//button[text()="Submit"]').click();
           ```
         - Use sparingly as they are less resilient to DOM changes.
-
+- ## frame :
+    - special element to breakdown page into multiple frames
+    - to locate elements inside frame we need to locate parent frame first
+    - frame can contain frame inside it.
+- ## fuction use:
+- ## test groups using describe:
+- ## annotations:
+    - test.skip
+        - can be just skip or conditional skip too!
+    - test.fail
+    - test.only
+    - test.fixme
+    - test.slow
+    - tag
+        - authentication
+        - smoke
+        - regression
+        - examples more..
+    - use of grep for running tests
+        - grep invert
 - **Web Testing Intro**
 
     - open the same page in chrome.
@@ -270,3 +289,7 @@ testng : before and after methods from selenium are called fixtures in playwrigh
         - example:
         ```javascript
         ```
+## Test grouping
+
+## annotations
+
