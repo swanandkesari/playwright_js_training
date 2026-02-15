@@ -1,29 +1,45 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
+/**
+ * Helper function to handle login.
+ * @param {import('@playwright/test').Page} page
+ * @param {string} [username='stc123']
+ * @param {string} [password='12345']
+ */
 async function login(page, username = 'stc123', password = '12345') {
-    //Click on Myaccount to enter in Login Page
-    await page.getByRole('link', { name: 'My Account' }).click();
-    // enter the username
-    await page.getByPlaceholder('Username').fill(username);
-    // enter the password
-    await page.getByRole('textbox', { name: 'Password' }).fill(password);
+    await test.step(`Login with user: ${username}`, async () => {
+        //Click on Myaccount to enter in Login Page
+        await page.getByRole('link', { name: 'My Account' }).click();
+        // enter the username
+        await page.getByPlaceholder('Username').fill(username);
+        // enter the password
+        await page.getByRole('textbox', { name: 'Password' }).fill(password);
 
-    // Click the login button.
-    await page.getByRole('button', { name: 'Submit' }).click();
-    await page.waitForLoadState();
+        // Click the login button.
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await page.waitForLoadState();
+    });
 }
 
+/**
+ * Helper function to open Customized Tours page in a new tab.
+ * @param {import('@playwright/test').Page} page
+ * @param {import('@playwright/test').BrowserContext} context
+ * @returns {Promise<import('@playwright/test').Page>}
+ */
 async function openCustomizedTours(page, context) {
-    const customizedTourPromise = context.waitForEvent('page');
-    await page.getByRole('link', { name: 'Customized tours' }).click();
-    const customizedTourPage = await customizedTourPromise;
-    await customizedTourPage.waitForLoadState();
-    return customizedTourPage;
+    return await test.step('Open Customized Tours page', async () => {
+        const customizedTourPromise = context.waitForEvent('page');
+        await page.getByRole('link', { name: 'Customized tours' }).click();
+        const customizedTourPage = await customizedTourPromise;
+        await customizedTourPage.waitForLoadState();
+        return customizedTourPage;
+    });
 }
 
 test.describe('Tourism test suite', async () => {
-
+    //use beforeEach hook to navigate to the URL before each test
     test.beforeEach(async ({ page }) => {
         await page.goto('https://nichethyself.com/tourism/');
     });
@@ -43,12 +59,14 @@ test.describe('Tourism test suite', async () => {
         // 3. Click on Submit button
         // 4. Handle the alert and capture the alert message and print it on console
         test('alert raised for blank password', async ({ page }) => {
+            // Setup dialog listener before triggering the alert
             page.on('dialog', async dialog => {
                 console.log(`Dialog message: ${dialog.message()}`);
                 expect(dialog.message()).toBe('Please enter Password');
                 expect(dialog.type()).toBe('alert');
                 await dialog.accept();
             });
+            // Attempt login with blank password to trigger alert
             await login(page, 'stc123', '');
         });
 
@@ -66,6 +84,7 @@ test.describe('Tourism test suite', async () => {
             await login(page);
 
             // After successful login, click on ship icon but listening to the dialog event to handle the confirm alert
+            // Using page.once ensures this listener runs only for the next dialog event
             page.once('dialog', async dialog => {
                 expect(dialog.message()).toBe('Do you wanna leave the page?');
                 // expect(dialog.message()).toBe('Do you want to visit our tourism packages page?');
