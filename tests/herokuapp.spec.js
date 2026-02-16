@@ -3,13 +3,14 @@
 import { test, expect } from '@playwright/test';
 
 
-//Assignment to handle alert type prompt
-// 1. Visit the URL: https://the-internet.herokuapp.com/
-// 2. Click on JavaScript Alerts link
-// 3. Click on Click for JS Prompt button  
-// 4. Handle the prompt by entering some text "Hello World" and accepting the prompt (Clicking OK button)
-// 5. Verify that the result text is showing the entered text
-test('alert raised', async ({ page, context }) => {
+/*Assignment to handle alert type prompt
+* 1. Visit the URL: https://the-internet.herokuapp.com/
+* 2. Click on JavaScript Alerts link
+* 3. Click on Click for JS Prompt button  
+* 4. Handle the prompt by entering some text "Hello World" and accepting the prompt (Clicking OK button)
+* 5. Verify that the result text is showing the entered text
+*/
+test('alert raised', { tag: ['@alert'] }, async ({ page, context }) => {
     await page.goto('https://the-internet.herokuapp.com/');
 
     // Click on JavaScript Alerts link
@@ -41,7 +42,7 @@ test('alert raised', async ({ page, context }) => {
 // 2. Click on the Nested frame link
 // 3. Verify the text in each frame
 
-test('frame handling for nested frames', async ({ page }) => {
+test('frame handling for nested frames', { tag: ['@frames'] }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/frames');
     await page.getByRole('link', { name: 'Nested Frames' }).click();
     await page.waitForLoadState();
@@ -63,7 +64,7 @@ test('frame handling for nested frames', async ({ page }) => {
 // 1. Go to the https://the-internet.herokuapp.com/frames
 // 2. Click on the iframe link
 // 3. Verify the text inside the editor
-test('frame handling for iframe', async ({ page }) => {
+test('frame handling for iframe', { tag: ['@frames'] }, async ({ page }) => {
     await page.goto('https://the-internet.herokuapp.com/frames');
     await page.getByRole('link', { name: 'iFrame' }).click();
     await page.waitForLoadState();
