@@ -42,6 +42,7 @@ test.describe('Tourism test suite', async () => {
     //use beforeEach hook to navigate to the URL before each test
     test.beforeEach(async ({ page }) => {
         await page.goto('https://nichethyself.com/tourism/');
+        await page.goto('https://nichethyself.com/tourism/', { waitUntil: 'domcontentloaded' });
     });
 
     test.describe('Login tests', () => {

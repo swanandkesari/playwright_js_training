@@ -158,7 +158,37 @@
 
 ### 18. Assignment custom fixtures
 **Test name** : custom fixture test
-**File name** : tourism.spec.js
+**File name** : tourismV2.spec.js
 1. Visit the URL: https://nichethyself.com/tourism/home.html
 2. Create a custom fixture for login
 3. use it for login tests.
+
+### 19. Assignment custom fixtures
+**Test name** : custom fixture test
+**File name** : tourismV3.spec.js
+1. Visit the URL: https://nichethyself.com/tourism/home.html
+2. Create a custom fixture this time do it with scope worker
+3. Write another test for customized tours select England in checkbox using above fixture.
+
+### 20. Assignment annotations and tags
+**File name** : tourismV3.spec.js
+- try different annotations: 
+- add tags to your testcases.
+
+### 21. Assignment for Page object model
+**File Structure:** 
+- tourismTestWithPageObjectModel
+    - components
+    - fixtures
+    - pages
+-tests
+
+1. FOr website: https://nichethyself.com/tourism 
+2. Create a login page
+3. Create Myaccount page class
+4. Customized tour page class
+5. page fixtures like authenticated page fixture
+6. Test cases using these fixtures.
+    - testcase should not have locator
+    - page file should not have more expects. 
+    

@@ -8,7 +8,7 @@ import { test as base, expect } from '@playwright/test';
  */
 async function login(page, username = 'stc123', password = '12345') {
     await base.step(`Login with user: ${username}`, async () => {
-        await page.goto('https://nichethyself.com/tourism/');
+        await page.goto('https://nichethyself.com/tourism/', { waitUntil: 'domcontentloaded' });
         //Click on Myaccount to enter in Login Page
         await page.getByRole('link', { name: 'My Account' }).click();
         // enter the username
@@ -48,50 +48,49 @@ const test = base.extend({
         await use(page);
         //logout after the test is done if required
     },
+
+    sharedResource: [async ({ }, use) => {
+        // Expensive setup - only done once per worker
+        const resource = {
+            id: Math.random().toString(36).substring(7),
+            createdAt: new Date().toISOString(),
+        };
+        console.log(`Created shared resource: ${resource.id}`);
+
+        await use(resource);
+
+        // Teardown once when worker is done
+        console.log(`Cleaning up resource: ${resource.id}`);
+    }, { scope: 'worker' }],
+
 });
 
 test.describe('Tourism test suite', { tag: ['@Tourism'] }, async () => {
 
     test.describe('Login tests', { tag: ['@Login'] }, () => {
-        test('tourism login test', { tag: ['@loggedInFixture'] }, async ({ loggedInPage }) => {
+        test('tourism login test', { tag: ['@loggedInFixture'] }, async ({ loggedInPage, sharedResource }) => {
             //await login(page); already done in the fixture, so no need to call it again here
             // Verify that we are on the correct page (My account)
             await expect(loggedInPage).toHaveTitle('My account');
+            await expect(sharedResource.id).toBeTruthy();
         });
 
-        //Assignment to handle alert
-        //Date 4Feb26
-        //Alert case 1.
-        // 1. Visit the URL: https://nichethyself.com/tourism/home.html
-        // 2. Enter the username and keep password blank
-        // 3. Click on Submit button
-        // 4. Handle the alert and capture the alert message and print it on console
-        test('alert raised for blank password', { tag: ['@alert'] }, async ({ page }) => {
-            // Setup dialog listener before triggering the alert
-            page.on('dialog', async dialog => {
-                console.log(`Dialog message: ${dialog.message()}`);
-                expect(dialog.message()).toBe('Please enter Password');
-                expect(dialog.type()).toBe('alert');
-                await dialog.accept();
-            });
-            // Attempt login with blank password to trigger alert manually
-            await login(page, 'stc123', '');
-        });
-
-        //Assignment to handle alert and confirm
-        //Date 4Feb26
-        //Alert case 2.
-        // 1. Visit the URL: https://nichethyself.com/tourism/home.html
-        // 2. Enter the valid username and password and click on submit button
-        // 3. After successful login, click on ship icon
-        // 4. Handle alert by typing click on Cancel button and capture the alert message and print it on console
-        // 5. Verify that you are still on the same page by checking the page title
-        // 6. Again click on ship icon and this time accept the alert by clicking on OK button and capture the alert message and print it on console
-        // 7. Verify that you are navigated to the new page by checking the page title
-        test('alert and confirm handling test', { tag: ['@loggedInFixture'] }, async ({ loggedInPage }) => {
+        /*Assignment to handle alert and confirm
+        * Date 4Feb26
+        * Alert case 2.
+        *  1. Visit the URL: https://nichethyself.com/tourism/home.html
+        *  2. Enter the valid username and password and click on submit button
+        *  3. After successful login, click on ship icon
+        *  4. Handle alert by typing click on Cancel button and capture the alert message and print it on console
+        *  5. Verify that you are still on the same page by checking the page title
+        *  6. Again click on ship icon and this time accept the alert by clicking on OK button and capture the alert message and print it on console
+        *  7. Verify that you are navigated to the new page by checking the page title
+        */
+        test('alert and confirm handling test', { tag: ['@loggedInFixture'] }, async ({ loggedInPage, sharedResource }) => {
             //await login(loggedInPage);// fixture is used for login, so no need to call it again here
             // After successful login, click on ship icon but listening to the dialog event to handle the confirm alert
             // Using page.once ensures this listener runs only for the next dialog event
+            await expect(sharedResource.id).toBeTruthy();
             loggedInPage.once('dialog', async dialog => {
                 expect(dialog.message()).toBe('Do you wanna leave the page?');
                 expect(dialog.type()).toBe('confirm');
@@ -116,12 +115,32 @@ test.describe('Tourism test suite', { tag: ['@Tourism'] }, async () => {
             // Verify that you are navigated to the new page by checking the page title
             await expect(loggedInPage).toHaveTitle('STC Tourism');
         });
+
+        /* * Assignment to handle alert
+        * Date 4Feb26
+        * Alert case 1.
+        * 1. Visit the URL: https://nichethyself.com/tourism/home.html
+        * 2. Enter the username and keep password blank
+        * 3. Click on Submit button
+        * 4. Handle the alert and capture the alert message and print it on console
+        */
+        test('alert raised for blank password', { tag: ['@alert'] }, async({ loggedInPage(page,'stc123', '') }) => {
+            // Setup dialog listener before triggering the alert
+            loggedInPage.on('dialog', async dialog => {
+                console.log(`Dialog message: ${dialog.message()}`);
+                expect(dialog.message()).toBe('Please enter Password');
+                expect(dialog.type()).toBe('alert');
+                await dialog.accept();
+            });
+            // Attempt login with blank password to trigger alert manually
+            //await login(page, 'stc123', '');
+        });
     });
 
     test.describe('Customized tour tests', { tag: ['@CustomizedTours'] }, () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('https://nichethyself.com/tourism/');
+            await page.goto('https://nichethyself.com/tourism/', { waitUntil: 'domcontentloaded' });
         });
 
         /*Assignment to handle new tab functionality
@@ -168,7 +187,7 @@ test.describe('Tourism test suite', { tag: ['@Tourism'] }, async () => {
     test.describe('Screenshot tests', { tag: ['@Screenshot'] }, () => {
 
         test.beforeEach(async ({ page }) => {
-            await page.goto('https://nichethyself.com/tourism/');
+            await page.goto('https://nichethyself.com/tourism/', { waitUntil: 'domcontentloaded' });
         });
         /* Assignment snapshot assert
         * 1. Visit the URL: https://nichethyself.com/tourism/home.html
